@@ -24,7 +24,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong>
-            <span style="float:right;margin-right:10px">Updated: <span class="dwstorecastupdated">n/a</span></span>
+            <span style="float:right;margin-right:10px"><strong>Collected:</strong> <span class="dwstorecastupdated">n/a</span></span>
         </th>
     </tr>
 </thead>
@@ -42,7 +42,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong>
-            <span style="float:right;margin-right:10px">Updated: <span class="dwstorecastupdated">n/a</span></span>
+            <span style="float:right;margin-right:10px"><strong>Collected:</strong> <span class="dwstorecastupdated">n/a</span></span>
         </th>
     </tr>
 </thead>
@@ -224,8 +224,10 @@ Waiting for Forecast...
             if (data && data.response) {
                 if (data.running) {
                     $('.dwstorecasticon').show();
+                    $('.dwstorecastupdated').hide();
                 } else {
                     $('.dwstorecasticon').hide();
+                    $('.dwstorecastupdated').show();
                 }
                 if(data.modtime) {
                     $('.dwstorecastupdated').text(data.modtime);
