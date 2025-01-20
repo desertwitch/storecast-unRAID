@@ -59,7 +59,7 @@ Waiting for Forecast...
 
 <script>
     let chart;
-    const availableSpace = <?=json_encode(disk_total_space('/mnt/user/'))?>;
+    const availableSpace = <?=json_encode(disk_total_space('/mnt/user/') ?: 0)?>;
 
     const options = {
         chart: {
@@ -225,14 +225,14 @@ Waiting for Forecast...
                 if (data.running) {
                     $('.dwstorecasticon').show();
                     $('#dwstorecastmanual').prop('disabled', true);
-                    $('.dwstorecastupdated').text("Generated: in Progress");
+                    $('.dwstorecastupdated').html("<strong>Generation in Progress</strong>");
                 } else {
                     $('.dwstorecasticon').hide();
                     $('#dwstorecastmanual').prop('disabled', false);
                     if(data.modtime) {
-                        $('.dwstorecastupdated').text(`Generated: ${data.modtime}`);
+                        $('.dwstorecastupdated').html(`<strong>Generated:</strong> ${data.modtime}`);
                     } else {
-                        $('.dwstorecastupdated').text("Generated: n/a");
+                        $('.dwstorecastupdated').html("<strong>Generated:</strong> n/a");
                     }
                 }
                 $('#dwstorecastlog').html(data.response);
