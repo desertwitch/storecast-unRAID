@@ -1,2 +1,3 @@
 #!/bin/bash
+echo "Halting the storage forecast generation..." | logger -t "storecast-plugin" 
 killall storecast
