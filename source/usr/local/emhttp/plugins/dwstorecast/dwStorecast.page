@@ -5,6 +5,17 @@ Icon="sun-o"
 Tag="sun-o"
 Markdown="false"
 ---
+<?php
+if(isset($display['theme']) && $display['theme']) {
+    switch ($display['theme']) {
+      case 'white': $theme = 'light'; break;
+      case 'black': $theme = 'dark'; break;
+      case 'azure': $theme = 'light'; break;
+      case 'gray' : $theme = 'dark'; break;
+      default     : $theme = 'light'; break;
+    }
+} else { $theme = 'light'; }
+?>
 
 <script src="<?autov('/webGui/javascript/jquery.apexcharts.js')?>"></script>
 
@@ -32,7 +43,7 @@ Markdown="false"
 <tbody>
     <tr>
         <td>
-            <pre id="dwstorecastlog" style="max-height:300px;overflow:auto;">
+            <pre id="dwstorecastlog">
 Waiting for Forecast...
             </pre>
         </td>
@@ -120,11 +131,14 @@ Waiting for Forecast...
                 },
             },
         },
+        theme: { 
+            mode:'<?=$theme?>' 
+        },
     };
 
     function formatBytes(bytes) {
         if(bytes === 0) return '0 B';
-        const k = 1024;
+        const k = 1000;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
