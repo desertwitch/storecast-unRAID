@@ -49,8 +49,8 @@ run the post-installation scripts
 storecast -j >/tmp/storecast.log 2>&amp;1 &amp;
 echo ""
 echo "****************************************************************"
-echo " The first metrics are now being collected..."
-echo " You can see them on the Storecast page in a few minutes!"
+echo " The first forecast is now being generated..."
+echo " You can see it on the Storecast page in a few minutes!"
 echo "****************************************************************"
 echo ""
 echo "----------------------------------------------------------------"
