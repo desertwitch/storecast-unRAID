@@ -11,7 +11,7 @@ Markdown="false"
 <table class="tablesorter shift">
 <thead>
     <tr>
-        <th><strong>Storage Forecast</strong></th>
+        <th><i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong></th>
     </tr>
 </thead>
 <tbody>
@@ -23,193 +23,231 @@ Markdown="false"
 </tbody>
 </table>
 
+<table class="tablesorter shift">
+<thead>
+    <tr>
+        <th><i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong></th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>
+            <pre id="dwstorecastlog" style="max-height:300px;overflow:auto;">
+Waiting for Forecast...
+            </pre>
+        </td>
+    </tr>
+</tbody>
+</table>
+
 <script>
-    $(function() {
-        function formatBytes(bytes) {
-            if(bytes === 0) return '0 B';
-            const k = 1024;
-            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
+    let chart;
 
-        const availableSpace = <?=json_encode(disk_total_space('/mnt/user/'))?>;
+    const availableSpace = <?=json_encode(disk_total_space('/mnt/user/'))?>;
 
-        const options = {
-            chart: {
-                type: 'line',
-                height: 400,
-                toolbar: {
-                    show: false,
-                },
-                zoom: {
-                    enabled: false,
-                },
-                animations: {
-                    enabled: false,
+    const options = {
+        chart: {
+            type: 'line',
+            height: 400,
+            toolbar: {
+                show: false,
+            },
+            zoom: {
+                enabled: false,
+            },
+            animations: {
+                enabled: false,
+            },
+        },
+        series: [],
+        colors: ['#007BFF', '#A9A9A9'],
+        xaxis: {
+            type: 'datetime',
+            title: {
+                text: 'Time',
+            },
+        },
+        yaxis: {
+            title: {
+                text: 'Storage',
+            },
+            labels: {
+                formatter: function(value) {
+                    return formatBytes(value);
                 },
             },
-            series: [],
-            colors: ['#007BFF', '#A9A9A9'],
-            xaxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Time',
-                },
+        },
+        noData: {
+            text: 'Waiting for Forecast...',
+            align: 'center',
+            verticalAlign: 'middle',
+            style: {
+                color: '#666',
+                fontSize: '16px',
             },
-            yaxis: {
-                title: {
-                    text: 'Storage',
-                },
-                labels: {
-                    formatter: function(value) {
-                        return formatBytes(value);
-                    },
-                },
-            },
-            noData: {
-                text: 'Waiting for Forecast...',
-                align: 'center',
-                verticalAlign: 'middle',
-                style: {
-                    color: '#666',
-                    fontSize: '16px',
-                },
-            },
-            legend: {
-                horizontalAlign: 'right',
-            },
-            annotations: {
-                yaxis: [{
-                    y: availableSpace,
+        },
+        legend: {
+            horizontalAlign: 'right',
+        },
+        annotations: {
+            yaxis: [{
+                y: availableSpace,
+                borderColor: '#FF0000',
+                label: {
                     borderColor: '#FF0000',
-                    label: {
-                        borderColor: '#FF0000',
-                        style: {
-                            color: '#fff',
-                            background: '#FF0000',
-                        },
-                        text: `Installed Space (${formatBytes(availableSpace)})`,
+                    style: {
+                        color: '#fff',
+                        background: '#FF0000',
                     },
-                }, ],
-            },
-            stroke: {
-                width: [2, 2],
-                dashArray: [0, 4], 
-            },
-            markers: {
-                size: 4,
-            },
-            tooltip: {
-                x: {
-                    format: 'yyyy-MM-dd',
+                    text: `Installed Storage (${formatBytes(availableSpace)})`,
                 },
-                y: {
-                    formatter: function(value) {
-                        return formatBytes(value);
-                    },
+            }, ],
+        },
+        stroke: {
+            width: [2, 2],
+            dashArray: [0, 4], 
+        },
+        markers: {
+            size: 4,
+        },
+        tooltip: {
+            x: {
+                format: 'yyyy-MM-dd',
+            },
+            y: {
+                formatter: function(value) {
+                    return formatBytes(value);
                 },
             },
-        };
+        },
+    };
 
-        const chart = new ApexCharts($('#chart')[0], options);
-        chart.render();
+    function formatBytes(bytes) {
+        if(bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 
-        function fetchChartData() {
-            return $.ajax({
-                    url: '<?autov('/plugins/dwstorecast/storecast.json')?>',
-                    dataType: 'json',
-                })
-                .then((data) => {
-                    if(!data.history || !data.forecast) {
-                        chart.updateOptions({
-                            noData: {
-                                text: 'Waiting for Forecast...',
-                                align: 'center',
-                                verticalAlign: 'middle',
-                                style: {
-                                    color: '#666',
-                                    fontSize: '16px',
-                                },
+    function fetchChartData() {
+        return $.ajax({
+                url: '<?autov('/plugins/dwstorecast/storecast.json')?>',
+                dataType: 'json',
+            })
+            .then((data) => {
+                if(!data.history || !data.forecast) {
+                    chart.updateOptions({
+                        noData: {
+                            text: 'Waiting for Forecast...',
+                            align: 'center',
+                            verticalAlign: 'middle',
+                            style: {
+                                color: '#666',
+                                fontSize: '16px',
                             },
-                        });
-                        return {
-                            history: [],
-                            forecast: [],
-                        };
-                    }
-                    
-                    if(data.history.length > 0 && data.forecast.length > 0) {
-                        const lastHistoryPoint = data.history[data.history.length - 1];
-                        const firstForecastPoint = data.forecast[0];
-                        if(lastHistoryPoint.x !== firstForecastPoint.x) {
-                            data.forecast.unshift({
-                                x: lastHistoryPoint.x,
-                                y: lastHistoryPoint.y
-                            });
-                        }
-                    }
-
+                        },
+                    });
                     return {
-                        history: data.history.map((dp) => ({
-                            x: dp.x,
-                            y: dp.y
-                        })),
-                        forecast: data.forecast.map((dp) => ({
-                            x: dp.x,
-                            y: dp.y
-                        })),
+                        history: [],
+                        forecast: [],
                     };
-                })
-                .catch((error) => {
-                    console.error('Error loading chart data:', error);
-                    chart.updateOptions({
-                        noData: {
-                            text: 'Failed to load forecast. Please try again later.',
-                            align: 'center',
-                            verticalAlign: 'middle',
-                            style: {
-                                color: '#FF0000', 
-                                fontSize: '16px',
-                            },
-                        },
-                    });
-                });
-        }
+                }
+                
+                if(data.history.length > 0 && data.forecast.length > 0) {
+                    const lastHistoryPoint = data.history[data.history.length - 1];
+                    const firstForecastPoint = data.forecast[0];
+                    if(lastHistoryPoint.x !== firstForecastPoint.x) {
+                        data.forecast.unshift({
+                            x: lastHistoryPoint.x,
+                            y: lastHistoryPoint.y
+                        });
+                    }
+                }
 
-        function renderChart() {
-            fetchChartData()
-                .then((chartData) => {
-                    if (!chartData) return;
-                    chart.updateSeries([
-                        {
-                            name: 'History',
-                            data: chartData.history,
+                return {
+                    history: data.history.map((dp) => ({
+                        x: dp.x,
+                        y: dp.y
+                    })),
+                    forecast: data.forecast.map((dp) => ({
+                        x: dp.x,
+                        y: dp.y
+                    })),
+                };
+            })
+            .catch((error) => {
+                console.error('Error loading chart data:', error);
+                chart.updateOptions({
+                    noData: {
+                        text: 'Failed to load forecast. Please try again later.',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        style: {
+                            color: '#FF0000', 
+                            fontSize: '16px',
                         },
-                        {
-                            name: 'Forecast',
-                            data: chartData.forecast,
-                        },
-                    ]);
-                })
-                .catch((error) => {
-                    console.error('Error fetching chart data:', error);
-                    chart.updateOptions({
-                        noData: {
-                            text: 'Failed to load forecast. Please try again later.',
-                            align: 'center',
-                            verticalAlign: 'middle',
-                            style: {
-                                color: '#FF0000',
-                                fontSize: '16px',
-                            },
-                        },
-                    });
-                })
-                .always(() => {
-                    setTimeout(renderChart, 5000);
+                    },
                 });
-        }
-        renderChart();
+            });
+    }
+
+    function updateChart() {
+        clearTimeout(timers.updateStorecast);
+        fetchChartData()
+            .then((chartData) => {
+                if (!chartData) return;
+                chart.updateSeries([
+                    {
+                        name: 'History',
+                        data: chartData.history,
+                    },
+                    {
+                        name: 'Forecast',
+                        data: chartData.forecast,
+                    },
+                ]);
+            })
+            .catch((error) => {
+                console.error('Error fetching chart data:', error);
+                chart.updateOptions({
+                    noData: {
+                        text: 'Failed to load forecast. Please try again later.',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        style: {
+                            color: '#FF0000',
+                            fontSize: '16px',
+                        },
+                    },
+                });
+            })
+            .always(() => {
+                timers.updateStorecast = setTimeout(updateChart, 5000);
+            });
+    }
+
+    function updateLogs() {
+        clearTimeout(timers.updateStorecastLog);
+        $.get('/plugins/dwstorecast/include/dwstorecast_log.php', function(data) {
+            if (data && data.response) {
+                if(data.running) {
+                    $('.dwstorecasticon').show();
+                } else {
+                    $('.dwstorecasticon').hide();
+                }
+                $('#dwstorecastlog').html(data.response);
+            }
+        }, 'json')
+        .always(function() {
+            timers.updateStorecastLog = setTimeout(updateLogs, 5000);
+        });
+    }
+
+    $(function() {
+        chart = new ApexCharts($('#chart')[0], options)
+        chart.render();
+        updateChart();
+        updateLogs();
     });
 </script>
