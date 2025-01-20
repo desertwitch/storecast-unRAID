@@ -24,7 +24,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong>
-            <span class="dwstorecastupdated" style="float:right;margin-right:10px"></span>
+            <span id="dwstorecastmodtimejson" style="float:right;margin-right:10px;text-transform:none;"></span>
         </th>
     </tr>
 </thead>
@@ -42,7 +42,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong>
-            <span class="dwstorecastupdated" style="float:right;margin-right:10px"></span>
+            <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;text-transform:none;"></span>
         </th>
     </tr>
 </thead>
@@ -225,14 +225,20 @@ Waiting for Forecast...
                 if (data.running) {
                     $('.dwstorecasticon').show();
                     $('#dwstorecastmanual').prop('disabled', true);
-                    $('.dwstorecastupdated').html("<strong>Generation in Progress</strong>");
+                    $('#dwstorecastmodtimelog').html("<strong>Generation in Progress</strong>");
+                    $('#dwstorecastmodtimejson').html("<strong>Generation in Progress</strong>");
                 } else {
                     $('.dwstorecasticon').hide();
                     $('#dwstorecastmanual').prop('disabled', false);
-                    if(data.modtime) {
-                        $('.dwstorecastupdated').html(`<strong>Generated:</strong> ${data.modtime}`);
+                    if(data.modtime_json) {
+                        $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${data.modtime_json}`);
                     } else {
-                        $('.dwstorecastupdated').html("<strong>Generated:</strong> n/a");
+                        $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
+                    }
+                    if(data.modtime_log) {
+                        $('#dwstorecastmodtimelog').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
+                    } else {
+                        $('#dwstorecastmodtimelog').html("<strong>Report Generated:</strong> n/a");
                     }
                 }
                 $('#dwstorecastlog').html(data.response);
