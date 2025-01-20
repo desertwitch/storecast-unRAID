@@ -1,0 +1,78 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "dwstorecast">
+<!ENTITY author    "desertwitch">
+<!ENTITY version   "2025.01.20">
+<!ENTITY launch    "Settings/dwStorecast">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/storecast-unRAID/main">
+<!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
+<!ENTITY pkgURL    "&gitURL;/packages">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+<!ENTITY plgNAME   "dwttm-2025.01.14-x86_64-1">
+<!ENTITY plgMD5    "d8523d17947e73d585ffa8f795b02cf6">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="" min="6.12.1" icon="sun-o">
+
+<CHANGES>
+## Storecast for UNRAID
+###2025.01.20
+- release note: welcome to the first version of the plugin
+- release note: please report any issues in the support thread on the forums
+</CHANGES>
+
+<!--
+stop already running instances before doing anything
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+killall storecast >/dev/null 2>&amp;1
+exit 0
+</INLINE>
+</FILE>
+
+<!--
+install or upgrade the plugin itself
+-->
+<FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12.1" Run="upgradepkg --install-new">
+<URL>&gitURL;/archive/&plgNAME;.txz</URL>
+<MD5>&plgMD5;</MD5>
+</FILE>
+
+<!--
+run the post-installation scripts
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+echo ""
+echo "----------------------------------------------------------------"
+echo " Storecast for UNRAID has been installed."
+echo " Version: &version; / Plugin Maintainer: &author;"
+echo "----------------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!--
+definition for uninstallation of the plugin
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+killall storecast >/dev/null 2>&amp;1
+
+removepkg &plgPATH;/*.txz
+rm -rf &plgPATH;
+rm -rf &emhttp;
+
+echo ""
+echo "----------------------------------------------------------------"
+echo " Storecast for UNRAID has been removed."
+echo " Version: &version; / Plugin Maintainer: &author;"
+echo "----------------------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+</PLUGIN>

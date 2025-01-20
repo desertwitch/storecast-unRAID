@@ -1,0 +1,138 @@
+Menu="Utilities"
+Type="xmenu"
+Title="Storecast"
+Icon="sun-o"
+Tag="sun-o"
+Markdown="false"
+---
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<table class="tablesorter shift">
+<thead>
+    <tr>
+        <th>Storecast - Storage Forecast</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>
+            <div id="chart"></div>
+        </td>
+    </tr>
+</tbody>
+</table>
+
+<script>
+  // Convert bytes to human-readable format
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Fixed available space in bytes (18TB)
+  const availableSpace = <?php echo json_encode(disk_total_space('/mnt/user/')); ?>;
+
+  // Load the JSON file
+  async function fetchChartData() {
+    try {
+      const response = await fetch('/plugins/dwstorecast/storecast.json');
+      if (!response.ok) throw new Error('Failed to fetch JSON data');
+      const data = await response.json();
+
+      // Connect history and forecast
+      if (data.history.length > 0 && data.forecast.length > 0) {
+        const lastHistoryPoint = data.history[data.history.length - 1];
+        const firstForecastPoint = data.forecast[0];
+        if (lastHistoryPoint.x !== firstForecastPoint.x) {
+          // Insert the last history point into the forecast for a seamless connection
+          data.forecast.unshift({ x: lastHistoryPoint.x, y: lastHistoryPoint.y });
+        }
+      }
+
+      return {
+        history: data.history.map(dp => ({ x: dp.x, y: dp.y })),
+        forecast: data.forecast.map(dp => ({ x: dp.x, y: dp.y })),
+      };
+    } catch (error) {
+      console.error('Error loading chart data:', error);
+    }
+  }
+
+  // Render the chart
+  async function renderChart() {
+    const chartData = await fetchChartData();
+
+    if (!chartData) return;
+
+    const options = {
+      chart: {
+        type: 'line',
+        height: 400,
+      },
+      series: [
+        {
+          name: 'History',
+          data: chartData.history,
+        },
+        {
+          name: 'Forecast',
+          data: chartData.forecast,
+        },
+      ],
+      xaxis: {
+        type: 'datetime',
+        title: {
+          text: 'Date',
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'File Size',
+        },
+        labels: {
+          formatter: value => formatBytes(value), // Format y-axis labels
+        },
+      },
+      annotations: {
+        yaxis: [
+          {
+            y: availableSpace, // Position of the horizontal line
+            borderColor: '#FF0000', // Red line
+            label: {
+              borderColor: '#FF0000',
+              style: {
+                color: '#fff',
+                background: '#FF0000',
+              },
+              text: Available Space (${formatBytes(availableSpace)}),
+            },
+          },
+        ],
+      },
+      stroke: {
+        width: [2, 2],
+        dashArray: [0, 4], // Solid line for history, dashed line for forecast
+      },
+      markers: {
+        size: 4,
+      },
+      tooltip: {
+        x: {
+          format: 'yyyy-MM-dd',
+        },
+        y: {
+          formatter: value => formatBytes(value), // Format tooltip values
+        },
+      },
+    };
+
+    const chart = new ApexCharts(document.querySelector('#chart'), options);
+    chart.render();
+  }
+
+  renderChart();
+</script>
