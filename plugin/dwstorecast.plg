@@ -46,8 +46,12 @@ run the post-installation scripts
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-echo "Generating first metrics..."
 storecast -j >/tmp/storecast.log 2>&amp;1 &amp;
+echo ""
+echo "****************************************************************"
+echo " The first metrics are now being collected..."
+echo " You can see them on the Storecast page in a few minutes!"
+echo "****************************************************************"
 echo ""
 echo "----------------------------------------------------------------"
 echo " Storecast for UNRAID has been installed."
