@@ -2,8 +2,13 @@
     try {
         $storecast_running = !empty(shell_exec("pgrep -x storecast 2>/dev/null"));
         if(file_exists("/tmp/storecast.log")) {
+            $modtime = filemtime("/tmp/storecast.log");
+            if($modtime) {
+                $modtime = date("Y-m-d H:i:s", $modtime);
+            }
             echo json_encode([
                 'running' => $storecast_running,
+                'modtime' => $modtime,
                 'response' => htmlspecialchars(file_get_contents("/tmp/storecast.log") ?: "Failed to load logfile.")
             ]);
         } else {

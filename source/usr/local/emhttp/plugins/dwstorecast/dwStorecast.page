@@ -22,7 +22,10 @@ if(isset($display['theme']) && $display['theme']) {
 <table class="tablesorter shift">
 <thead>
     <tr>
-        <th><i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong></th>
+        <th>
+            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong>
+            <span style="float:right;margin-right:10px">Updated: <span class="dwstorecastupdated">n/a</span></span>
+        </th>
     </tr>
 </thead>
 <tbody>
@@ -37,7 +40,10 @@ if(isset($display['theme']) && $display['theme']) {
 <table class="tablesorter">
 <thead>
     <tr>
-        <th><i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong></th>
+        <th>
+            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong>
+            <span style="float:right;margin-right:10px">Updated: <span class="dwstorecastupdated">n/a</span></span>
+        </th>
     </tr>
 </thead>
 <tbody>
@@ -64,7 +70,7 @@ Waiting for Forecast...
             animations: { enabled: false },
         },
         series: [],
-        colors: ['#007BFF', '#A9A9A9', '#A9A9A9', '#A9A9A9'],
+        colors: ['#007BFF', '#007BFF', '#C63821', '#EA9000'],
         xaxis: {
             type: 'datetime',
             title: { text: 'Time' },
@@ -91,18 +97,18 @@ Waiting for Forecast...
         },
         annotations: {
             yaxis: [{
-                y: availableSpace,
-                borderColor: '#FF0000',
+                y: 0,
+                y2: availableSpace,
+                fillColor: '#D7F6D5',
                 label: {
-                    borderColor: '#FF0000',
-                    style: { color: '#fff', background: '#FF0000' },
+                    style: { color: '#fff', background: '#387B1D' },
                     text: `Installed Storage (${formatBytes(availableSpace)})`,
                 },
             }],
         },
         stroke: {
             width: [2, 2, 1, 1],
-            dashArray: [0, 0, 4, 4],
+            dashArray: [0, 4, 4, 4],
         },
         markers: {
             size: 4,
@@ -208,7 +214,7 @@ Waiting for Forecast...
                 });
             })
             .always(() => {
-                timers.updateStorecast = setTimeout(updateChart, 5000);
+                timers.updateStorecast = setTimeout(updateChart, 10000);
             });
     }
 
@@ -221,10 +227,15 @@ Waiting for Forecast...
                 } else {
                     $('.dwstorecasticon').hide();
                 }
+                if(data.modtime) {
+                    $('.dwstorecastupdated').text(data.modtime);
+                } else {
+                    $('.dwstorecastupdated').text("n/a");
+                }
                 $('#dwstorecastlog').html(data.response);
             }
         }, 'json').always(function() {
-            timers.updateStorecastLog = setTimeout(updateLogs, 5000);
+            timers.updateStorecastLog = setTimeout(updateLogs, 10000);
         });
     }
 
