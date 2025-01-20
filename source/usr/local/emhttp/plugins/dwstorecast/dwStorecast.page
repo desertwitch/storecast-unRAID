@@ -41,7 +41,7 @@ if(isset($display['theme']) && $display['theme']) {
 <thead>
     <tr>
         <th>
-            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Details</strong>
+            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Report</strong>
             <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;text-transform:none;"></span>
         </th>
     </tr>
