@@ -95,6 +95,7 @@ Waiting for Forecast...
         legend: {
             horizontalAlign: 'right',
         },
+        <? if(file_exists("/mnt/user")): ?>
         annotations: {
             yaxis: [{
                 y: 0,
@@ -106,6 +107,7 @@ Waiting for Forecast...
                 },
             }],
         },
+        <? endif; ?>
         stroke: {
             width: [2, 2, 1, 1],
             dashArray: [0, 4, 4, 4],
@@ -134,7 +136,7 @@ Waiting for Forecast...
 
     function fetchChartData() {
         return $.ajax({
-            url: '<?autov('/plugins/dwstorecast/storecast.json')?>',
+            url: '/plugins/dwstorecast/storecast.json',
             dataType: 'json',
         }).then((data) => {
             if (!data.history || !data.forecast) {
