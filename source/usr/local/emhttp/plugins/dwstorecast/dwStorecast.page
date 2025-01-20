@@ -59,7 +59,7 @@ Waiting for Forecast...
 
 <script>
     let chart;
-    const availableSpace = <?=json_encode(disk_total_space('/mnt/user/') ?: 0)?>;
+    const availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
 
     const options = {
         chart: {
