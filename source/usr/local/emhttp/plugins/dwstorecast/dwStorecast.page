@@ -224,15 +224,16 @@ Waiting for Forecast...
             if (data && data.response) {
                 if (data.running) {
                     $('.dwstorecasticon').show();
-                    $('.dwstorecastupdated').hide();
+                    $('#dwstorecastmanual').prop('disabled', true);
+                    $('.dwstorecastupdated').text("Generated: in Progress");
                 } else {
                     $('.dwstorecasticon').hide();
-                    $('.dwstorecastupdated').show();
-                }
-                if(data.modtime) {
-                    $('.dwstorecastupdated').text(data.modtime);
-                } else {
-                    $('.dwstorecastupdated').text("n/a");
+                    $('#dwstorecastmanual').prop('disabled', false);
+                    if(data.modtime) {
+                        $('.dwstorecastupdated').text(`Generated: ${data.modtime}`);
+                    } else {
+                        $('.dwstorecastupdated').text("Generated: n/a");
+                    }
                 }
                 $('#dwstorecastlog').html(data.response);
             }
