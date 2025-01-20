@@ -1,0 +1,2 @@
+#!/bin/bash
+storecast -j &>/tmp/storecast.log
