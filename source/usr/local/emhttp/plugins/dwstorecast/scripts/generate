@@ -15,5 +15,5 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 #
-echo "Started generation in background (you can close this window now)..."
+echo "Starting forecast generation..."
 nohup storecast -j &>/tmp/storecast.log &

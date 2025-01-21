@@ -71,7 +71,12 @@ killall storecast >/dev/null 2>&amp;1
 removepkg &plgPATH;/*.txz
 rm -rf &plgPATH;
 rm -rf &emhttp;
+
 rm -f /tmp/storecast*
+rm -f /etc/cron.hourly/storecast
+rm -f /etc/cron.daily/storecast
+rm -f /etc/cron.weekly/storecast
+rm -f /etc/cron.monthly/storecast
 
 echo ""
 echo "----------------------------------------------------------------"

@@ -64,6 +64,36 @@ if(isset($display['theme']) && $display['theme']) {
 <input type="hidden" name="#file" value="dwstorecast/dwstorecast.cfg">
 <input type="hidden" id="dwstorecast-cmd" name="#command" value="/usr/local/emhttp/plugins/dwstorecast/scripts/write_config">
 
+<dl>
+    <dt>Show Storage Forecast Dashboard:</dt>
+    <dd>
+        <select name="DASHBOARD" size="1">
+            <?=mk_option($dwstorecast_dashboard, 'disable', 'No');?>
+            <?=mk_option($dwstorecast_dashboard, 'enable', 'Yes');?>
+        </select>
+    </dd>
+</dl>
+
+<blockquote class="inline_help">
+    <p>Sets if the storage forecast dashboard should be shown on the OS frontpage.</p>
+</blockquote>
+
+<dl>
+    <dt>Automated Periodic Forecast Generation:</dt>
+    <dd>
+        <select name="FORECASTCRON" size="1">
+            <?=mk_option($dwstorecast_forecastcron, 'disable', 'No');?>
+            <?=mk_option($dwstorecast_forecastcron, 'hourly', 'Every Hour');?>
+            <?=mk_option($dwstorecast_forecastcron, 'daily', 'Every Day');?>
+            <?=mk_option($dwstorecast_forecastcron, 'weekly', 'Every Week');?>
+            <?=mk_option($dwstorecast_forecastcron, 'monthly', 'Every Month');?>
+        </select>
+    </dd>
+</dl>
+
+<blockquote class="inline_help">
+    <p>Sets or disables the schedule to create new storage forecasts in an automated manner.</p>
+</blockquote>
 
 <dl>
     <dt>Plugin Usage Metric Functions:</dt>
@@ -315,5 +345,10 @@ Waiting for Forecast...
         chart.render();
         updateChart();
         updateLogs();
+
+        $('#MANUALGENERATE').click(function(){
+            $('#dwstorecast-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/generate');
+            $('#dwstorecast-settings').submit();
+        });
     });
 </script>
