@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "Started generation in background (you can close this window now)..."
+nohup storecast -j &>/tmp/storecast.log &

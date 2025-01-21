@@ -1,3 +1,5 @@
 #!/bin/bash
-echo "Halting any storage forecast generations..." | logger -t "storecast-plugin" 
-killall storecast
+if pgrep -x storecast &>/dev/null; then
+    echo "Halting storage forecast generation..." | logger -t "storecast-plugin" 
+    killall storecast
+fi
