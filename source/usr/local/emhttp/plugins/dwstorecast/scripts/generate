@@ -16,4 +16,6 @@
 # included in all copies or substantial portions of the Software.
 #
 echo "Starting forecast generation..."
+echo "Generating a new storage forecast..." | logger -t "storecast-plugin"
 nohup storecast -j &>/tmp/storecast.log &
+
