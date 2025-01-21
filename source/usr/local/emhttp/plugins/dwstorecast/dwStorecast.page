@@ -42,7 +42,8 @@ if(isset($display['theme']) && $display['theme']) {
 <thead>
     <tr>
         <th>
-            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong>
+            <strong>Storage Forecast</strong>
+            <span class="dwstorecasticon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
             <span id="dwstorecastmodtimejson" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
@@ -128,7 +129,8 @@ if(isset($display['theme']) && $display['theme']) {
 <thead>
     <tr>
         <th>
-            <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Report</strong>
+            <strong>Storage Forecast - Report</strong>
+            <span class="dwstorecasticon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
             <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
@@ -318,9 +320,9 @@ Waiting for Forecast...
         $.get('/plugins/dwstorecast/include/dwstorecast_log.php', function(data) {
             if (data && data.response) {
                 if (data.running) {
-                    $('.dwstorecasticon').show();
                     $('#dwstorecastmodtimelog').hide();
                     $('#dwstorecastmodtimejson').hide();
+                    $('.dwstorecasticon').show();
                     $('#dwstorecastmanual').prop('disabled', true);
                     $('.dwstorecast-run').prop('disabled', false);
                     $('.dwstorecast-not-run').prop('disabled', true);
