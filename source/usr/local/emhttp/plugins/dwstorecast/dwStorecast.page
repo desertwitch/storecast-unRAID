@@ -43,7 +43,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast</strong>
-            <span id="dwstorecastmodtimejson" style="float:right;margin-right:10px;text-transform:none;"></span>
+            <span id="dwstorecastmodtimejson" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
 </thead>
@@ -98,7 +98,7 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <i class="dwstorecasticon fa fa-cog fa-spin" style="display:none;"></i> <strong>Storage Forecast - Report</strong>
-            <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;text-transform:none;"></span>
+            <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
 </thead>
