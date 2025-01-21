@@ -239,7 +239,7 @@ Waiting for Forecast...
             console.error('Error loading chart data:', error);
             chart.updateOptions({
                 noData: {
-                    text: 'Failed to load forecast. Please try again later.',
+                    text: 'Failed to load forecast. Please re-generate it.',
                     align: 'center',
                     verticalAlign: 'middle',
                     style: { color: '#FF0000', fontSize: '16px' },
@@ -264,7 +264,7 @@ Waiting for Forecast...
                 console.error('Error fetching chart data:', error);
                 chart.updateOptions({
                     noData: {
-                        text: 'Failed to load forecast. Please try again later.',
+                        text: 'Failed to load forecast. Please re-generate it.',
                         align: 'center',
                         verticalAlign: 'middle',
                         style: { color: '#FF0000', fontSize: '16px' },
