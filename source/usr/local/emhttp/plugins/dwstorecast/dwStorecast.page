@@ -292,7 +292,7 @@ Waiting for Forecast...
                     { name: 'Forecast -20%', data: chartData.forecastDown },
                 ]);
                 if(chartData.timestamp) {
-                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${data.modtime_json}`);
+                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${chartData.timestamp}`);
                 } else {
                     $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
                 }     
