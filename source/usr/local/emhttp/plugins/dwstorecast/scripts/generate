@@ -17,5 +17,7 @@
 #
 echo "Starting forecast generation..."
 echo "Generating a new storage forecast..." | logger -t "storecast-plugin"
+cp -f /usr/local/emhttp/plugins/dwstorecast/misc/storecast.json /tmp/storecast.json
+cp -f /usr/local/emhttp/plugins/dwstorecast/misc/storecast.json /tmp/storecast-dash.json
 nohup storecast -j &>/tmp/storecast.log &
 

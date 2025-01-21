@@ -237,7 +237,7 @@ Waiting for Forecast...
                         style: { color: '#666', fontSize: '16px' },
                     },
                 });
-                return { timestamp: false, history: [], forecast: [], forecastUp: [], forecastDown: [] };
+                return { timestamp: false };
             }
 
             if (data.history.length > 0 && data.forecast.length > 0) {
@@ -287,17 +287,19 @@ Waiting for Forecast...
         fetchChartData()
             .then((chartData) => {
                 if (!chartData) return;
+                if(chartData.timestamp) {
+                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${chartData.timestamp}`);
+                } else {
+                    $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
+                    chart.updateSeries([]);
+                    return;
+                } 
                 chart.updateSeries([
                     { name: 'History', data: chartData.history },
                     { name: 'Forecast', data: chartData.forecast },
                     { name: 'Forecast +20%', data: chartData.forecastUp },
                     { name: 'Forecast -20%', data: chartData.forecastDown },
                 ]);
-                if(chartData.timestamp) {
-                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${chartData.timestamp}`);
-                } else {
-                    $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
-                }     
             })
             .catch((error) => {
                 console.error('Error fetching chart data:', error);
