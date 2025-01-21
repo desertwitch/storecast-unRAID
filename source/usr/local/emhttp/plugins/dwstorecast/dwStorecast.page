@@ -309,7 +309,7 @@ Waiting for Forecast...
                 });
             })
             .always(() => {
-                timers.updateStorecast = setTimeout(updateChart, 10000);
+                timers.updateStorecast = setTimeout(updateChart, 5000);
             });
     }
 
@@ -341,7 +341,7 @@ Waiting for Forecast...
                 $('#dwstorecastlog').html(data.response);
             }
         }, 'json').always(function() {
-            timers.updateStorecastLog = setTimeout(updateLogs, 10000);
+            timers.updateStorecastLog = setTimeout(updateLogs, 5000);
         });
     }
 
