@@ -235,7 +235,7 @@ Waiting for Forecast...
                         style: { color: '#666', fontSize: '16px' },
                     },
                 });
-                return { history: [], forecast: [], forecastUp: [], forecastDown: [] };
+                return { timestamp: [], history: [], forecast: [], forecastUp: [], forecastDown: [] };
             }
 
             if (data.history.length > 0 && data.forecast.length > 0) {
@@ -261,6 +261,7 @@ Waiting for Forecast...
             });
 
             return {
+                timestamp: data.timestamp,
                 history: data.history.map((dp) => ({ x: dp.x, y: dp.y })),
                 forecast: forecastWithDeviation.map((dp) => ({ x: dp.x, y: dp.y })),
                 forecastUp: forecastWithDeviation.map((dp) => ({ x: dp.x, y: dp.yUp })),
@@ -290,6 +291,11 @@ Waiting for Forecast...
                     { name: 'Forecast +20%', data: chartData.forecastUp },
                     { name: 'Forecast -20%', data: chartData.forecastDown },
                 ]);
+                if(chartData.timestamp) {
+                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${data.modtime_json}`);
+                } else {
+                    $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
+                }     
             })
             .catch((error) => {
                 console.error('Error fetching chart data:', error);
@@ -313,26 +319,24 @@ Waiting for Forecast...
             if (data && data.response) {
                 if (data.running) {
                     $('.dwstorecasticon').show();
+                    $('#dwstorecastmodtimelog').hide();
+                    $('#dwstorecastmodtimejson').hide();
                     $('#dwstorecastmanual').prop('disabled', true);
                     $('.dwstorecast-run').prop('disabled', false);
                     $('.dwstorecast-not-run').prop('disabled', true);
-                    $('#dwstorecastmodtimelog').html("<strong>Generation in Progress</strong>");
-                    $('#dwstorecastmodtimejson').html("<strong>Generation in Progress</strong>");
+
                 } else {
-                    $('.dwstorecasticon').hide();
-                    $('#dwstorecastmanual').prop('disabled', false);
-                    $('.dwstorecast-run').prop('disabled', true);
-                    $('.dwstorecast-not-run').prop('disabled', false);
-                    if(data.modtime_json) {
-                        $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${data.modtime_json}`);
-                    } else {
-                        $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
-                    }
                     if(data.modtime_log) {
                         $('#dwstorecastmodtimelog').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
                     } else {
                         $('#dwstorecastmodtimelog').html("<strong>Report Generated:</strong> n/a");
                     }
+                    $('.dwstorecasticon').hide();
+                    $('#dwstorecastmodtimelog').show();
+                    $('#dwstorecastmodtimejson').show();
+                    $('#dwstorecastmanual').prop('disabled', false);
+                    $('.dwstorecast-run').prop('disabled', true);
+                    $('.dwstorecast-not-run').prop('disabled', false);
                 }
                 $('#dwstorecastlog').html(data.response);
             }
