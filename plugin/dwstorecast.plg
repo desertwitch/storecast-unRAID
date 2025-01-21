@@ -46,11 +46,10 @@ run the post-installation scripts
 -->
 <FILE Run="/bin/bash">
 <INLINE>
-storecast -j >/tmp/storecast.log 2>&amp;1 &amp;
 echo ""
 echo "****************************************************************"
-echo " The first forecast is now being generated..."
-echo " You can see it on the Storecast page in a few minutes!"
+echo " Please visit the Storecase page to generate a forecast,"
+echo " and/or set up the automated generation of storage forecasts."
 echo "****************************************************************"
 echo ""
 echo "----------------------------------------------------------------"
