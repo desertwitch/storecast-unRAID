@@ -235,7 +235,7 @@ Waiting for Forecast...
                         style: { color: '#666', fontSize: '16px' },
                     },
                 });
-                return { timestamp: [], history: [], forecast: [], forecastUp: [], forecastDown: [] };
+                return { timestamp: false, history: [], forecast: [], forecastUp: [], forecastDown: [] };
             }
 
             if (data.history.length > 0 && data.forecast.length > 0) {
