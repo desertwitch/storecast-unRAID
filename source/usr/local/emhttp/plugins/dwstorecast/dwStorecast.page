@@ -222,7 +222,7 @@ Waiting for Forecast...
 
     function fetchChartData() {
         return $.ajax({
-            url: '/plugins/dwstorecast/storecast.json',
+            url: '/plugins/dwstorecast/storecast.json?nocache=' + new Date().getTime(),
             dataType: 'json',
         }).then((data) => {
             if (!data.history || !data.forecast) {
