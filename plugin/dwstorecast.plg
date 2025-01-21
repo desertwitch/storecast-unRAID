@@ -48,8 +48,8 @@ run the post-installation scripts
 <INLINE>
 echo ""
 echo "****************************************************************"
-echo " Please visit the Storecase page to generate a forecast,"
-echo " and/or set up the automated generation of storage forecasts."
+echo "!! Please go to the Storecast page to generate the first fore-"
+echo "!! cast and/or set up automated generation of future forecasts"
 echo "****************************************************************"
 echo ""
 echo "----------------------------------------------------------------"
