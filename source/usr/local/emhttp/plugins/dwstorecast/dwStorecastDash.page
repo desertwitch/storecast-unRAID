@@ -27,6 +27,7 @@ Link="nav-user"
 <? if($dwstorecast_dashboard === "enable"): ?>
 
 <?
+try {
 if(isset($display['theme']) && $display['theme']) {
     switch ($display['theme']) {
       case 'white': $dwsd_theme = 'light'; break;
@@ -62,9 +63,13 @@ $mytiles[$pluginname]['column2'] =
     </tr>
 </tbody>
 EOT;
+} catch (\Throwable $t) {
+    error_log($t);
+}
 ?>
 
 <script>
+try {
     let dwsd_chart;
     const dwsd_availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
 
@@ -254,6 +259,9 @@ EOT;
         dwsd_updateChart();
         dwsd_updateLogs();
     });
+} catch(e) {
+    console.error(e);
+}
 </script>
 
 <? endif; ?>
