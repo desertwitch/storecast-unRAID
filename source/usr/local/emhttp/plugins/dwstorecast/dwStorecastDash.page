@@ -1,0 +1,260 @@
+Menu="Buttons:199"
+Link="nav-user"
+---
+<?
+/* Copyright Derek Macias (parts of code from NUT package)
+ * Copyright macester (parts of code from NUT package)
+ * Copyright gfjardim (parts of code from NUT package)
+ * Copyright SimonF (parts of code from NUT package)
+ * Copyright Dan Landon (parts of code from Web GUI)
+ * Copyright Bergware International (parts of code from Web GUI)
+ * Copyright Lime Technology (any and all other parts of Unraid)
+ *
+ * Copyright desertwitch (as author and maintainer of this file)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ */
+?>
+
+<? if(stripos($path, "dashboard") !== false): ?>
+<? require_once '/usr/local/emhttp/plugins/dwstorecast/include/dwstorecast_config.php'; ?>
+<? if($dwstorecast_dashboard === "enable"): ?>
+    
+<?
+if(isset($display['theme']) && $display['theme']) {
+    switch ($display['theme']) {
+      case 'white': $dwsd_theme = 'light'; break;
+      case 'black': $dwsd_theme = 'dark'; break;
+      case 'azure': $dwsd_theme = 'light'; break;
+      case 'gray' : $dwsd_theme = 'dark'; break;
+      default     : $dwsd_theme = 'light'; break;
+    }
+} else { $dwsd_theme = 'light'; }
+
+$pluginname = "dwstorecast";
+$mytiles[$pluginname]['column2'] =
+<<<EOT
+<tbody id="dwsd-dashboard" title="Storecast">
+    <tr>
+        <td>
+            <i class="fa fa-sun-o f32"></i>
+                <div class="section">Storecast<br>
+                    <span class="dwsd-dicon" style="display:none;">
+                        <i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong>
+                    </span>
+                    <span id="dwsd-dtime">
+                        <em>Loading...</em>
+                    </span>
+                </div>
+                <a href="/Dashboard/dwStorecast" title="_(Go to Storecast Settings)_"><i class="fa fa-fw fa-cog control"></i></a>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-left:15px;padding-right:15px;padding-top:5px;">
+            <div id="dwsd-chart"></div>
+        </td>
+    </tr>
+</tbody>
+EOT;
+?>
+
+<script>
+    let dwsd_chart;
+    const dwsd_availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
+
+    const dwsd_options = {
+        chart: {
+            type: 'line',
+            height: 250,
+            toolbar: { show: false },
+            zoom: { enabled: false },
+            animations: { enabled: false },
+        },
+        series: [],
+        colors: ['#007BFF', '#007BFF', '#C63821', '#EA9000'],
+        xaxis: {
+            type: 'datetime',
+            title: { text: 'Time' },
+        },
+        yaxis: {
+            title: { text: 'Storage' },
+            labels: {
+                formatter: function(value) {
+                    return dwsd_formatBytes(value);
+                },
+            },
+        },
+        noData: {
+            text: 'Waiting for Forecast...',
+            align: 'center',
+            verticalAlign: 'middle',
+            style: {
+                color: '#666',
+                fontSize: '16px',
+            },
+        },
+        legend: {
+            horizontalAlign: 'right',
+        },
+        <? if(file_exists("/mnt/user")): ?>
+        annotations: {
+            yaxis: [{
+                y: 0,
+                y2: dwsd_availableSpace,
+                fillColor: '#D7F6D5',
+            }],
+        },
+        <? endif; ?>
+        stroke: {
+            width: [2, 2, 1, 1],
+            dashArray: [0, 4, 4, 4],
+        },
+        markers: {
+            size: 4,
+        },
+        tooltip: {
+            x: { format: 'yyyy-MM-dd' },
+            y: {
+                formatter: function(value) {
+                    return dwsd_formatBytes(value);
+                },
+            },
+        },
+        theme: { mode:'<?=$dwsd_theme?>' },
+    };
+
+    function dwsd_formatBytes(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1000;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function dwsd_fetchChartData() {
+        return $.ajax({
+            url: '/plugins/dwstorecast/storecast-dash.json?nocache=' + new Date().getTime(),
+            dataType: 'json',
+        }).then((data) => {
+            if (!data.history || !data.forecast) {
+                dwsd_chart.updateOptions({
+                    noData: {
+                        text: 'Waiting for Forecast...',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        style: { color: '#666', fontSize: '16px' },
+                    },
+                });
+                return { timestamp: false };
+            }
+
+            if (data.history.length > 0 && data.forecast.length > 0) {
+                const lastHistoryPoint = data.history[data.history.length - 1];
+                const firstForecastPoint = data.forecast[0];
+                if (lastHistoryPoint.x !== firstForecastPoint.x) {
+                    data.forecast.unshift({ x: lastHistoryPoint.x, y: lastHistoryPoint.y });
+                }
+            }
+
+            const forecastWithDeviation = data.forecast.map((dp, index) => {
+                const yUp = dp.y * 1.2;
+                const yDown = dp.y * 0.8;
+                // if (index === 0) {
+                //     return {
+                //         x: dp.x,
+                //         y: dp.y,
+                //         yUp: dp.y, // Connect to last history point
+                //         yDown: dp.y // Connect to last history point
+                //     };
+                // }
+                return { x: dp.x, y: dp.y, yUp, yDown };
+            });
+
+            return {
+                timestamp: data.timestamp,
+                history: data.history.map((dp) => ({ x: dp.x, y: dp.y })),
+                forecast: forecastWithDeviation.map((dp) => ({ x: dp.x, y: dp.y })),
+                forecastUp: forecastWithDeviation.map((dp) => ({ x: dp.x, y: dp.yUp })),
+                forecastDown: forecastWithDeviation.map((dp) => ({ x: dp.x, y: dp.yDown })),
+            };
+        }).catch((error) => {
+            console.error('Error loading chart data:', error);
+            dwsd_chart.updateOptions({
+                noData: {
+                    text: 'Failed to load forecast. Please re-generate it.',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    style: { color: '#FF0000', fontSize: '16px' },
+                },
+            });
+        });
+    }
+
+    function dwsd_updateChart() {
+        clearTimeout(timers.dwsdchart);
+        dwsd_fetchChartData()
+            .then((chartData) => {
+                if (!chartData) return;
+                if(chartData.timestamp) {
+                    $('#dwsd-dtime').html(`Generated: ${chartData.timestamp}`);
+                } else {
+                    $('#dwsd-dtime').html("Generated: n/a");
+                    chart.updateSeries([]);
+                    return;
+                } 
+                dwsd_chart.updateSeries([
+                    { name: 'History', data: chartData.history },
+                    { name: 'Forecast', data: chartData.forecast },
+                    { name: 'Forecast +20%', data: chartData.forecastUp },
+                    { name: 'Forecast -20%', data: chartData.forecastDown },
+                ]);
+            })
+            .catch((error) => {
+                console.error('Error fetching chart data:', error);
+                dwsd_chart.updateOptions({
+                    noData: {
+                        text: 'Failed to load forecast. Please re-generate it.',
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        style: { color: '#FF0000', fontSize: '16px' },
+                    },
+                });
+            })
+            .always(() => {
+                timers.dwsdchart = setTimeout(dwsd_updateChart, 5000);
+            });
+    }
+
+    function dwsd_updateLogs() {
+        clearTimeout(timers.dwsdlog);
+        $.get('/plugins/dwstorecast/include/dwstorecast_log.php', function(data) {
+            if (data && data.response) {
+                if (data.running) {
+                    $('#dwsd-dtime').hide();
+                    $('.dwsd-dicon').show();
+                } else {
+                    $('.dwsd-dicon').hide();
+                    $('#dwsd-dtime').show();
+                }
+            }
+        }, 'json').always(function() {
+            timers.dwsdlog = setTimeout(dwsd_updateLogs, 5000);
+        });
+    }
+
+    $(function() {
+        dwsd_chart = new ApexCharts($('#dwsd-chart')[0], dwsd_options);
+        dwsd_chart.render();
+        dwsd_updateChart();
+        dwsd_updateLogs();
+    });
+</script>
+
+<? endif; ?>
+<? endif; ?>

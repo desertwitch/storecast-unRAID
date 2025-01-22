@@ -27,13 +27,13 @@ Markdown="false"
 require_once '/usr/local/emhttp/plugins/dwstorecast/include/dwstorecast_config.php';
 if(isset($display['theme']) && $display['theme']) {
     switch ($display['theme']) {
-      case 'white': $theme = 'light'; break;
-      case 'black': $theme = 'dark'; break;
-      case 'azure': $theme = 'light'; break;
-      case 'gray' : $theme = 'dark'; break;
-      default     : $theme = 'light'; break;
+      case 'white': $dws_theme = 'light'; break;
+      case 'black': $dws_theme = 'dark'; break;
+      case 'azure': $dws_theme = 'light'; break;
+      case 'gray' : $dws_theme = 'dark'; break;
+      default     : $dws_theme = 'light'; break;
     }
-} else { $theme = 'light'; }
+} else { $dws_theme = 'light'; }
 ?>
 
 <script src="<?autov('/webGui/javascript/jquery.apexcharts.js')?>"></script>
@@ -43,8 +43,8 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <strong>Storage Forecast</strong>
-            <span class="dwstorecasticon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
-            <span id="dwstorecastmodtimejson" style="float:right;margin-right:10px;"></span>
+            <span class="dws-icon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
+            <span id="dws-time-json" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
 </thead>
@@ -61,9 +61,9 @@ if(isset($display['theme']) && $display['theme']) {
     <span class="left" style="font-size:1.1rem;letter-spacing:1px;padding-left:5px;"><strong><i class="icon fa fa-cogs"></i>GENERAL SETTINGS</strong></span>
 </div><br>
 
-<form markdown="0" id="dwstorecast-settings" name="dwstorecast_settings" method="POST" action="/update.php" target="progressFrame">
+<form markdown="0" id="dws-settings" name="dws_settings" method="POST" action="/update.php" target="progressFrame">
 <input type="hidden" name="#file" value="dwstorecast/dwstorecast.cfg">
-<input type="hidden" id="dwstorecast-cmd" name="#command" value="/usr/local/emhttp/plugins/dwstorecast/scripts/write_config">
+<input type="hidden" id="dws-cmd" name="#command" value="/usr/local/emhttp/plugins/dwstorecast/scripts/write_config">
 
 <dl>
     <dt>Show Storage Forecast Dashboard:</dt>
@@ -115,8 +115,8 @@ if(isset($display['theme']) && $display['theme']) {
 
 <dl>
         <dt>
-            <input type="button" class="dwstorecast-not-run" id="MANUALGENERATE" value="Manual Generation">
-            <input type="submit" class="dwstorecast-not-run" name="#default" value="Restore Defaults">
+            <input type="button" class="dws-not-run" id="MANUALGENERATE" value="Manual Generation">
+            <input type="submit" class="dws-not-run" name="#default" value="Restore Defaults">
         </dt>
         <dd>
             <input type="submit" name="#apply" value="Apply">
@@ -130,15 +130,15 @@ if(isset($display['theme']) && $display['theme']) {
     <tr>
         <th>
             <strong>Storage Forecast - Report</strong>
-            <span class="dwstorecasticon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
-            <span id="dwstorecastmodtimelog" style="float:right;margin-right:10px;"></span>
+            <span class="dws-icon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
+            <span id="dws-time-log" style="float:right;margin-right:10px;"></span>
         </th>
     </tr>
 </thead>
 <tbody>
     <tr>
         <td>
-            <pre id="dwstorecastlog">
+            <pre id="dws-log">
 Waiting for Forecast...
             </pre>
         </td>
@@ -147,8 +147,8 @@ Waiting for Forecast...
 </table>
 
 <script>
-    let chart;
-    const availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
+    let dws_chart;
+    const dws_availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
 
     const options = {
         chart: {
@@ -168,7 +168,7 @@ Waiting for Forecast...
             title: { text: 'Storage' },
             labels: {
                 formatter: function(value) {
-                    return formatBytes(value);
+                    return dws_formatBytes(value);
                 },
             },
         },
@@ -188,11 +188,11 @@ Waiting for Forecast...
         annotations: {
             yaxis: [{
                 y: 0,
-                y2: availableSpace,
+                y2: dws_availableSpace,
                 fillColor: '#D7F6D5',
                 label: {
                     style: { color: '#fff', background: '#387B1D' },
-                    text: `Installed Storage (${formatBytes(availableSpace)})`,
+                    text: `Installed Storage (${dws_formatBytes(dws_availableSpace)})`,
                 },
             }],
         },
@@ -208,14 +208,14 @@ Waiting for Forecast...
             x: { format: 'yyyy-MM-dd' },
             y: {
                 formatter: function(value) {
-                    return formatBytes(value);
+                    return dws_formatBytes(value);
                 },
             },
         },
-        theme: { mode:'<?=$theme?>' },
+        theme: { mode:'<?=$dws_theme?>' },
     };
 
-    function formatBytes(bytes) {
+    function dws_formatBytes(bytes) {
         if (bytes === 0) return '0 B';
         const k = 1000;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -223,13 +223,13 @@ Waiting for Forecast...
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    function fetchChartData() {
+    function dws_fetchChartData() {
         return $.ajax({
             url: '/plugins/dwstorecast/storecast.json?nocache=' + new Date().getTime(),
             dataType: 'json',
         }).then((data) => {
             if (!data.history || !data.forecast) {
-                chart.updateOptions({
+                dws_chart.updateOptions({
                     noData: {
                         text: 'Waiting for Forecast...',
                         align: 'center',
@@ -271,7 +271,7 @@ Waiting for Forecast...
             };
         }).catch((error) => {
             console.error('Error loading chart data:', error);
-            chart.updateOptions({
+            dws_chart.updateOptions({
                 noData: {
                     text: 'Failed to load forecast. Please re-generate it.',
                     align: 'center',
@@ -282,19 +282,19 @@ Waiting for Forecast...
         });
     }
 
-    function updateChart() {
-        clearTimeout(timers.updateStorecast);
-        fetchChartData()
+    function dws_updateChart() {
+        clearTimeout(timers.dwschart);
+        dws_fetchChartData()
             .then((chartData) => {
                 if (!chartData) return;
                 if(chartData.timestamp) {
-                    $('#dwstorecastmodtimejson').html(`<strong>Chart Generated:</strong> ${chartData.timestamp}`);
+                    $('#dws-time-json').html(`<strong>Chart Generated:</strong> ${chartData.timestamp}`);
                 } else {
-                    $('#dwstorecastmodtimejson').html("<strong>Chart Generated:</strong> n/a");
-                    chart.updateSeries([]);
+                    $('#dws-time-json').html("<strong>Chart Generated:</strong> n/a");
+                    dws_chart.updateSeries([]);
                     return;
                 } 
-                chart.updateSeries([
+                dws_chart.updateSeries([
                     { name: 'History', data: chartData.history },
                     { name: 'Forecast', data: chartData.forecast },
                     { name: 'Forecast +20%', data: chartData.forecastUp },
@@ -303,7 +303,7 @@ Waiting for Forecast...
             })
             .catch((error) => {
                 console.error('Error fetching chart data:', error);
-                chart.updateOptions({
+                dws_chart.updateOptions({
                     noData: {
                         text: 'Failed to load forecast. Please re-generate it.',
                         align: 'center',
@@ -313,51 +313,49 @@ Waiting for Forecast...
                 });
             })
             .always(() => {
-                timers.updateStorecast = setTimeout(updateChart, 5000);
+                timers.dwschart = setTimeout(dws_updateChart, 5000);
             });
     }
 
-    function updateLogs() {
-        clearTimeout(timers.updateStorecastLog);
+    function dws_updateLogs() {
+        clearTimeout(timers.dwslog);
         $.get('/plugins/dwstorecast/include/dwstorecast_log.php', function(data) {
             if (data && data.response) {
                 if (data.running) {
-                    $('#dwstorecastmodtimelog').hide();
-                    $('#dwstorecastmodtimejson').hide();
-                    $('.dwstorecasticon').show();
-                    $('#dwstorecastmanual').prop('disabled', true);
-                    $('.dwstorecast-run').prop('disabled', false);
-                    $('.dwstorecast-not-run').prop('disabled', true);
+                    $('#dws-time-log').hide();
+                    $('#dws-time-json').hide();
+                    $('.dws-icon').show();
+                    $('.dws-run').prop('disabled', false);
+                    $('.dws-not-run').prop('disabled', true);
 
                 } else {
                     if(data.modtime_log) {
-                        $('#dwstorecastmodtimelog').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
+                        $('#dws-time-log').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
                     } else {
-                        $('#dwstorecastmodtimelog').html("<strong>Report Generated:</strong> n/a");
+                        $('#dws-time-log').html("<strong>Report Generated:</strong> n/a");
                     }
-                    $('.dwstorecasticon').hide();
-                    $('#dwstorecastmodtimelog').show();
-                    $('#dwstorecastmodtimejson').show();
-                    $('#dwstorecastmanual').prop('disabled', false);
-                    $('.dwstorecast-run').prop('disabled', true);
-                    $('.dwstorecast-not-run').prop('disabled', false);
+                    $('.dws-icon').hide();
+                    $('#dws-time-log').show();
+                    $('#dws-time-json').show();
+                    $('.dws-run').prop('disabled', true);
+                    $('.dws-not-run').prop('disabled', false);
                 }
-                $('#dwstorecastlog').html(data.response);
+                $('#dws-log').html(data.response);
             }
         }, 'json').always(function() {
-            timers.updateStorecastLog = setTimeout(updateLogs, 5000);
+            timers.dwslog = setTimeout(dws_updateLogs, 5000);
         });
     }
 
     $(function() {
-        chart = new ApexCharts($('#chart')[0], options);
-        chart.render();
-        updateChart();
-        updateLogs();
+        dws_chart = new ApexCharts($('#chart')[0], options);
+        dws_chart.render();
+        dws_updateChart();
+        dws_updateLogs();
 
         $('#MANUALGENERATE').click(function(){
-            $('#dwstorecast-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/generate');
-            $('#dwstorecast-settings').submit();
+            $('#dws-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/generate');
+            $('#dws-settings').submit();
         });
     });
 </script>
