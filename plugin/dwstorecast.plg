@@ -29,6 +29,7 @@ stop already running instances before doing anything
 <FILE Run="/bin/bash">
 <INLINE>
 killall storecast >/dev/null 2>&amp;1
+killall dwstorecast-poller >/dev/null 2>&amp;1
 exit 0
 </INLINE>
 </FILE>
@@ -55,6 +56,7 @@ echo "!! Please go to the Storecast page to generate the first fore-"
 echo "!! cast and/or set up automated generation of future forecasts"
 echo "****************************************************************"
 echo ""
+/etc/cron.daily/dwstorecast-poller conntest >/dev/null 2>&amp;1 &amp;
 echo "----------------------------------------------------------------"
 echo " Storecast for UNRAID has been installed."
 echo " Version: &version; / Plugin Maintainer: &author;"
@@ -69,6 +71,7 @@ definition for uninstallation of the plugin
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
 killall storecast >/dev/null 2>&amp;1
+killall dwstorecast-poller >/dev/null 2>&amp;1
 
 removepkg &plgPATH;/*.txz
 rm -rf &plgPATH;
@@ -79,6 +82,7 @@ rm -f /etc/cron.hourly/storecast
 rm -f /etc/cron.daily/storecast
 rm -f /etc/cron.weekly/storecast
 rm -f /etc/cron.monthly/storecast
+rm -f /etc/cron.daily/dwstorecast-poller >/dev/null 2>&amp;1
 
 echo ""
 echo "----------------------------------------------------------------"
