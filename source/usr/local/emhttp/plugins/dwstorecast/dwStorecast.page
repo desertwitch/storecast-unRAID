@@ -196,6 +196,7 @@ Waiting for Forecast...
                 label: {
                     style: { color: '#fff', background: '#387B1D' },
                     text: `Installed Storage (${dws_formatBytes(dws_availableSpace)})`,
+                    position: 'left',
                 },
             }],
         },
