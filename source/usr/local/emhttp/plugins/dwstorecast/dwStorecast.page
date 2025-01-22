@@ -149,6 +149,8 @@ Waiting for Forecast...
 
 <script>
     let dws_chart;
+    let dws_timer = 30000;
+
     const dws_availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
 
     const options = {
@@ -219,7 +221,7 @@ Waiting for Forecast...
     function dws_formatBytes(bytes) {
         if (bytes === 0) return '0 B';
         const k = 1000;
-        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
@@ -314,7 +316,7 @@ Waiting for Forecast...
                 });
             })
             .always(() => {
-                timers.dwschart = setTimeout(dws_updateChart, 5000);
+                timers.dwschart = setTimeout(dws_updateChart, dws_timer);
             });
     }
 
@@ -330,7 +332,8 @@ Waiting for Forecast...
                     $('.dws-icon').show();
                     $('.dws-run').prop('disabled', false);
                     $('.dws-not-run').prop('disabled', true);
-
+                    dws_timer = 5000;
+                    dws_updateChart();
                 } else {
                     if(data.modtime_log) {
                         $('#dws-time-log').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
@@ -344,6 +347,8 @@ Waiting for Forecast...
                     $('#dws-time-json').show();
                     $('.dws-run').prop('disabled', true);
                     $('.dws-not-run').prop('disabled', false);
+                    dws_timer = 30000;
+                    dws_updateChart();
                 }
                 $('#dws-log').html(data.response);
             }

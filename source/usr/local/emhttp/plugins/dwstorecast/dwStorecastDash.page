@@ -73,12 +73,14 @@ EOT;
 <script>
 try {
     let dwsd_chart;
+    let dwsd_timer = 30000;
+
     const dwsd_availableSpace = <?=json_encode(@disk_total_space('/mnt/user/') ?: 0)?>;
 
     const dwsd_options = {
         chart: {
             type: 'line',
-            height: 250,
+            height: 300,
             toolbar: { show: false },
             zoom: { enabled: false },
             animations: { enabled: false },
@@ -139,7 +141,7 @@ try {
     function dwsd_formatBytes(bytes) {
         if (bytes === 0) return '0 B';
         const k = 1000;
-        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
@@ -234,7 +236,7 @@ try {
                 });
             })
             .always(() => {
-                timers.dwsdchart = setTimeout(dwsd_updateChart, 5000);
+                timers.dwsdchart = setTimeout(dwsd_updateChart, dwsd_timer);
             });
     }
 
@@ -245,9 +247,13 @@ try {
                 if (data.running) {
                     $('#dwsd-dtime').hide();
                     $('.dwsd-dicon').show();
+                    dwsd_timer = 5000;
+                    dwsd_updateChart();
                 } else {
                     $('.dwsd-dicon').hide();
                     $('#dwsd-dtime').show();
+                    dwsd_timer = 30000;
+                    dwsd_updateChart();
                 }
             }
         }, 'json').always(function() {
