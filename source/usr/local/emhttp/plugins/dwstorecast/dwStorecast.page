@@ -178,7 +178,7 @@ Waiting for Forecast...
             verticalAlign: 'middle',
             style: {
                 color: '#666',
-                fontSize: '16px',
+                fontSize: '15px',
             },
         },
         legend: {
@@ -234,7 +234,7 @@ Waiting for Forecast...
                         text: 'Waiting for Forecast...',
                         align: 'center',
                         verticalAlign: 'middle',
-                        style: { color: '#666', fontSize: '16px' },
+                        style: { color: '#666', fontSize: '15px' },
                     },
                 });
                 return { timestamp: false };
@@ -276,7 +276,7 @@ Waiting for Forecast...
                     text: 'Failed to load forecast. Please re-generate it.',
                     align: 'center',
                     verticalAlign: 'middle',
-                    style: { color: '#FF0000', fontSize: '16px' },
+                    style: { color: '#FF0000', fontSize: '15px' },
                 },
             });
         });
@@ -308,7 +308,7 @@ Waiting for Forecast...
                         text: 'Failed to load forecast. Please re-generate it.',
                         align: 'center',
                         verticalAlign: 'middle',
-                        style: { color: '#FF0000', fontSize: '16px' },
+                        style: { color: '#FF0000', fontSize: '15px' },
                     },
                 });
             })
