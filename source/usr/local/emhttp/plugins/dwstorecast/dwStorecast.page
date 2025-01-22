@@ -115,7 +115,8 @@ if(isset($display['theme']) && $display['theme']) {
 
 <dl>
         <dt>
-            <input type="button" class="dws-not-run" id="MANUALGENERATE" value="Manual Generation">
+            <input type="button" class="dws-run" id="STOPGENERATE" value="Stop Generation" style="display:none;">
+            <input type="button" class="dws-not-run" id="MANUALGENERATE" value="Manual Generation" style="display:none;">
             <input type="submit" class="dws-not-run" name="#default" value="Restore Defaults">
         </dt>
         <dd>
@@ -322,8 +323,10 @@ Waiting for Forecast...
         $.get('/plugins/dwstorecast/include/dwstorecast_log.php', function(data) {
             if (data && data.response) {
                 if (data.running) {
+                    $('#MANUALGENERATE').hide();
                     $('#dws-time-log').hide();
                     $('#dws-time-json').hide();
+                    $('#STOPGENERATE').show();
                     $('.dws-icon').show();
                     $('.dws-run').prop('disabled', false);
                     $('.dws-not-run').prop('disabled', true);
@@ -334,7 +337,9 @@ Waiting for Forecast...
                     } else {
                         $('#dws-time-log').html("<strong>Report Generated:</strong> n/a");
                     }
+                    $('#STOPGENERATE').hide();
                     $('.dws-icon').hide();
+                    $('#MANUALGENERATE').show();
                     $('#dws-time-log').show();
                     $('#dws-time-json').show();
                     $('.dws-run').prop('disabled', true);
@@ -355,6 +360,10 @@ Waiting for Forecast...
 
         $('#MANUALGENERATE').click(function(){
             $('#dws-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/generate');
+            $('#dws-settings').submit();
+        });
+        $('#STOPGENERATE').click(function(){
+            $('#dws-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/stopgenerate');
             $('#dws-settings').submit();
         });
     });

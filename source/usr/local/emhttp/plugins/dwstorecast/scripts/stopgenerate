@@ -15,11 +15,9 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 #
-echo "Starting forecast generation..."
+echo "Stopping forecast generation..."
 
-if ! pgrep -x storecast &>/dev/null; then
-    echo "Generating a new storage forecast..." | logger -t "storecast-plugin"
-    cp -f /usr/local/emhttp/plugins/dwstorecast/misc/storecast.json /tmp/storecast.json
-    cp -f /usr/local/emhttp/plugins/dwstorecast/misc/storecast.json /tmp/storecast-dash.json
-    nohup storecast -j &>/tmp/storecast.log &
+if pgrep -x storecast &>/dev/null; then
+    echo "Stopping storage forecast generation..." | logger -t "storecast-plugin"
+    killall storecast
 fi
