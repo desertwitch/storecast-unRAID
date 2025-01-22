@@ -18,7 +18,7 @@
 STORECONF="/boot/config/plugins/dwstorecast/dwstorecast.cfg"
 [ -e "$STORECONF" ] && source $STORECONF
 
-echo "Writing the configuration..."
+echo "Writing the storage forecast configuration..."
 
 case $FORECASTCRON in
     "disable")

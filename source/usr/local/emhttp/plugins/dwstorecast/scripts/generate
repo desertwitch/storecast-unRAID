@@ -15,7 +15,7 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 #
-echo "Starting forecast generation..."
+echo "Starting the storage forecast generation..."
 
 if ! pgrep -x storecast &>/dev/null; then
     echo "Generating a new storage forecast..." | logger -t "storecast-plugin"

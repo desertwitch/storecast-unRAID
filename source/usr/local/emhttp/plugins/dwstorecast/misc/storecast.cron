@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "Generating a new storage forecast..." | logger -t "storecast-plugin"
+echo "Generating a new storage forecast..." | logger -t "storecast-cron"
 nohup storecast -j &>/tmp/storecast.log &

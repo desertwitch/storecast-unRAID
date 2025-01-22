@@ -15,9 +15,9 @@
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
 #
-echo "Stopping forecast generation..."
+echo "Stopping the storage forecast generation..."
 
 if pgrep -x storecast &>/dev/null; then
-    echo "Stopping storage forecast generation..." | logger -t "storecast-plugin"
+    echo "Stopping the storage forecast generation..." | logger -t "storecast-plugin"
     killall storecast
 fi
