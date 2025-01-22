@@ -3,14 +3,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "dwstorecast">
 <!ENTITY author    "desertwitch">
-<!ENTITY version   "2025.01.22c">
+<!ENTITY version   "2025.01.22d">
 <!ENTITY launch    "Settings/dwStorecast">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/storecast-unRAID/main">
 <!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY plgNAME   "dwstorecast-2025.01.22-x86_64-4">
-<!ENTITY plgMD5    "a6604573afab3fe53874551e765acae6">
+<!ENTITY plgNAME   "dwstorecast-2025.01.22-x86_64-5">
+<!ENTITY plgMD5    "b257f1b2d3d4883952b8126b70ef0de2">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 
