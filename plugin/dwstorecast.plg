@@ -47,6 +47,7 @@ run the post-installation scripts
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+echo ""
 if [ -x &emhttp;/scripts/write_config ]; then
     &emhttp;/scripts/write_config
 fi
