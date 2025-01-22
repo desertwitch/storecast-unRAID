@@ -375,5 +375,9 @@ Waiting for Forecast...
             $('#dws-cmd').val('/usr/local/emhttp/plugins/dwstorecast/scripts/stopgenerate');
             $('#dws-settings').submit();
         });
+
+        if ( typeof caPluginUpdateCheck === "function" ) {
+            caPluginUpdateCheck("dwstorecast.plg",{name:"Storecast"});
+        }
     });
 </script>
