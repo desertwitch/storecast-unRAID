@@ -25,7 +25,7 @@ Link="nav-user"
 <? if(stripos($path, "dashboard") !== false): ?>
 <? require_once '/usr/local/emhttp/plugins/dwstorecast/include/dwstorecast_config.php'; ?>
 <? if($dwstorecast_dashboard === "enable"): ?>
-    
+
 <?
 if(isset($display['theme']) && $display['theme']) {
     switch ($display['theme']) {
@@ -205,7 +205,7 @@ EOT;
                     $('#dwsd-dtime').html(`Generated: ${chartData.timestamp}`);
                 } else {
                     $('#dwsd-dtime').html("Generated: n/a");
-                    chart.updateSeries([]);
+                    dwsd_chart.updateSeries([]);
                     return;
                 } 
                 dwsd_chart.updateSeries([
