@@ -65,6 +65,8 @@ $mytiles[$pluginname]['column2'] =
 EOT;
 } catch (\Throwable $t) {
     error_log($t);
+} catch (\Exception $e) {
+    error_log($e);
 }
 ?>
 
