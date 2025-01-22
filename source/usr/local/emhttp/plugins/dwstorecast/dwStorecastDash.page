@@ -126,7 +126,7 @@ try {
             size: 4,
         },
         tooltip: {
-            x: { format: 'yyyy-MM-dd' },
+            x: { format: 'yyyy-MM-dd hh:mm' },
             y: {
                 formatter: function(value) {
                     return dwsd_formatBytes(value);

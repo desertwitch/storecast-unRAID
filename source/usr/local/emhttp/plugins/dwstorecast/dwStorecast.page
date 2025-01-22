@@ -206,7 +206,7 @@ Waiting for Forecast...
             size: 4,
         },
         tooltip: {
-            x: { format: 'yyyy-MM-dd' },
+            x: { format: 'yyyy-MM-dd hh:mm' },
             y: {
                 formatter: function(value) {
                     return dws_formatBytes(value);
