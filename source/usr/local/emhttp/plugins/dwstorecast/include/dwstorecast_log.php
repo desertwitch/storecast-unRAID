@@ -30,7 +30,7 @@
         } else {
             echo json_encode([
                 'running' => $storecast_running,
-                'response' => "Nothing here (yet)... - go generate one! :-)"
+                'response' => "No storage forecast generation has taken place yet."
             ]);
         }
     } catch(\Throwable $t) {
