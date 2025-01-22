@@ -46,6 +46,9 @@ run the post-installation scripts
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+if [ -x &emhttp;/scripts/write_config ]; then
+    &emhttp;/scripts/write_config
+fi
 echo ""
 echo "****************************************************************"
 echo "!! Please go to the Storecast page to generate the first fore-"
