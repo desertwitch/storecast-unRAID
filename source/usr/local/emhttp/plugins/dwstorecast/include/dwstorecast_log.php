@@ -30,7 +30,7 @@
         } else {
             echo json_encode([
                 'running' => $storecast_running,
-                'response' => "Waiting for Forecast..."
+                'response' => "Nothing here (yet)... - go generate one! :-)"
             ]);
         }
     } catch(\Throwable $t) {
