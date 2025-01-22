@@ -332,8 +332,10 @@ Waiting for Forecast...
                     $('.dws-icon').show();
                     $('.dws-run').prop('disabled', false);
                     $('.dws-not-run').prop('disabled', true);
-                    dws_timer = 5000;
-                    dws_updateChart();
+                    if(dws_timer !== 5000) {
+                        dws_timer = 5000;
+                        dws_updateChart();
+                    }
                 } else {
                     if(data.modtime_log) {
                         $('#dws-time-log').html(`<strong>Report Generated:</strong> ${data.modtime_log}`);
@@ -347,8 +349,10 @@ Waiting for Forecast...
                     $('#dws-time-json').show();
                     $('.dws-run').prop('disabled', true);
                     $('.dws-not-run').prop('disabled', false);
-                    dws_timer = 30000;
-                    dws_updateChart();
+                    if(dws_timer !== 30000) {
+                        dws_timer = 30000;
+                        dws_updateChart();
+                    }
                 }
                 $('#dws-log').html(data.response);
             }

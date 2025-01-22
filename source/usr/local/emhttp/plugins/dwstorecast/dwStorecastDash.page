@@ -247,13 +247,17 @@ try {
                 if (data.running) {
                     $('#dwsd-dtime').hide();
                     $('.dwsd-dicon').show();
-                    dwsd_timer = 5000;
-                    dwsd_updateChart();
+                    if(dwsd_timer !== 5000) {
+                        dwsd_timer = 5000;
+                        dwsd_updateChart();
+                    }
                 } else {
                     $('.dwsd-dicon').hide();
                     $('#dwsd-dtime').show();
-                    dwsd_timer = 30000;
-                    dwsd_updateChart();
+                    if(dwsd_timer !== 30000) {
+                        dwsd_timer = 30000;
+                        dwsd_updateChart();
+                    }
                 }
             }
         }, 'json').always(function() {
