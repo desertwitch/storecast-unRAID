@@ -53,7 +53,7 @@ $mytiles[$pluginname]['column2'] =
                         <em>Loading...</em>
                     </span>
                 </div>
-                <a href="/Dashboard/dwStorecast" title="_(Go to Storecast Settings)_"><i class="fa fa-fw fa-cog control"></i></a>
+                <a href="/Settings/dwStorecast" title="_(Go to Storecast Settings)_"><i class="fa fa-fw fa-cog control"></i></a>
         </td>
     </tr>
     <tr>
