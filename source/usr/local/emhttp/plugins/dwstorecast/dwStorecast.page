@@ -130,7 +130,7 @@ if(isset($display['theme']) && $display['theme']) {
 <thead>
     <tr>
         <th>
-            <strong>Storage Forecast - Report</strong>
+            <strong>Storage Forecast - Detailed Report</strong>
             <span class="dws-icon" style="float:right;margin-right:10px;display:none;"><i class="fa fa-cog fa-spin"></i> <strong>Generation in Progress</strong></span>
             <span id="dws-time-log" style="float:right;margin-right:10px;"></span>
         </th>
