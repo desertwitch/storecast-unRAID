@@ -9,8 +9,8 @@
 <!ENTITY pluginURL "&gitURL;/plugin/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/packages">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
-<!ENTITY plgNAME   "dwstorecast-2025.01.22-x86_64-7">
-<!ENTITY plgMD5    "0d1ecd69931247023f6fb3a027291372">
+<!ENTITY plgNAME   "dwstorecast-2025.02.18-x86_64-1">
+<!ENTITY plgMD5    "90bdf0061f4952b61784794767a80da8">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 
