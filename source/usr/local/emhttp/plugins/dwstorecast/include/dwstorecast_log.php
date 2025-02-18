@@ -17,33 +17,33 @@
  * included in all copies or substantial portions of the Software.
  *
  */
-    try {
-        $storecast_running = !empty(shell_exec("pgrep -x storecast 2>/dev/null"));
-        if(file_exists("/tmp/storecast.log")) {
-            $modtime_log = filemtime("/tmp/storecast.log");
-            if($modtime_log) $modtime_log = date("Y-m-d H:i:s", $modtime_log);
-            echo json_encode([
-                'running' => $storecast_running,
-                'modtime_log' => $modtime_log,
-                'response' => htmlspecialchars(file_get_contents("/tmp/storecast.log") ?: "Failed to load logfile.")
-            ]);
-        } else {
-            echo json_encode([
-                'running' => $storecast_running,
-                'response' => "No storage forecast generation has taken place yet."
-            ]);
-        }
-    } catch(\Throwable $t) {
-        error_log($t);
+try {
+    $storecast_running = !empty(shell_exec("pgrep -x storecast 2>/dev/null"));
+    if(file_exists("/tmp/storecast.log")) {
+        $modtime_log = filemtime("/tmp/storecast.log");
+        if($modtime_log) $modtime_log = date("Y-m-d H:i:s", $modtime_log);
         echo json_encode([
             'running' => $storecast_running,
-            'response' => htmlspecialchars($t->getMessage())
+            'modtime_log' => $modtime_log,
+            'response' => htmlspecialchars(file_get_contents("/tmp/storecast.log") ?: "Failed to load logfile.")
         ]);
-    } catch(\Exception $e) {
-        error_log($e);
+    } else {
         echo json_encode([
             'running' => $storecast_running,
-            'response' => htmlspecialchars($e->getMessage())
+            'response' => "No storage forecast generation has taken place yet."
         ]);
     }
+} catch(\Throwable $t) {
+    error_log($t);
+    echo json_encode([
+        'running' => $storecast_running,
+        'response' => htmlspecialchars($t->getMessage())
+    ]);
+} catch(\Exception $e) {
+    error_log($e);
+    echo json_encode([
+        'running' => $storecast_running,
+        'response' => htmlspecialchars($e->getMessage())
+    ]);
+}
 ?>
