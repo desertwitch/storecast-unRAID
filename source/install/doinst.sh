@@ -29,7 +29,5 @@ cp -n /usr/local/emhttp/plugins/dwstorecast/misc/storecast.json /tmp/storecast-d
 ln -sf /tmp/storecast.json /usr/local/emhttp/plugins/dwstorecast/storecast.json
 ln -sf /tmp/storecast-dash.json /usr/local/emhttp/plugins/dwstorecast/storecast-dash.json
 
-# set up plugin-specific polling tasks
+# remove (legacy) plugin-specific polling tasks
 rm -f /etc/cron.daily/dwstorecast-poller >/dev/null 2>&1
-ln -sf /usr/local/emhttp/plugins/dwstorecast/scripts/poller /etc/cron.daily/dwstorecast-poller >/dev/null 2>&1
-chmod +x /etc/cron.daily/dwstorecast-poller >/dev/null 2>&1

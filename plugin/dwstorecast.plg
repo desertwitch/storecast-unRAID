@@ -18,6 +18,8 @@
 
 <CHANGES>
 ## Storecast for UNRAID
+###2025.02.26
+- fix: future-proofing changes to base plugin structure
 ###2025.02.18
 - release note: welcome to the first version of the plugin
 - release note: please report any issues in the support thread on the forums
@@ -57,7 +59,6 @@ echo "!! Please go to the Storecast page to generate the first fore-"
 echo "!! cast and/or set up automated generation of future forecasts"
 echo "****************************************************************"
 echo ""
-/etc/cron.daily/dwstorecast-poller conntest >/dev/null 2>&amp;1 &amp;
 echo "----------------------------------------------------------------"
 echo " Storecast for UNRAID has been installed."
 echo " Version: &version; / Plugin Maintainer: &author;"

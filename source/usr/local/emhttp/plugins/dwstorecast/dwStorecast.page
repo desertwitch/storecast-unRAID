@@ -97,23 +97,6 @@ if(isset($display['theme']) && $display['theme']) {
 </blockquote>
 
 <dl>
-    <dt>Plugin Usage Metric Functions:</dt>
-    <dd>
-        <select name="METRICSAPI" size="1">
-            <?=mk_option($dwstorecast_metricsapi, 'disable', 'No');?>
-            <?=mk_option($dwstorecast_metricsapi, 'enable', 'Yes');?>
-        </select>
-    </dd>
-</dl>
-
-<blockquote class="inline_help">
-    <p>Enables collection of <strong>anonymized</strong> plugin usage statistics through the plugin usage metrics API.</p>
-    <p>This aids prioritization of bug reports, development of new features and planning for plugin updates/deprecation.</p>
-    <p><em>Attributes: Metric ID, Plugin Version, Unraid Version, Dashboard Setting, Automated Generation Setting and Last Generation Successful (Yes/No).</em></p>
-    <p><strong><i class="fa fa-heart" style="color:red;"></i> If possible, please keep this setting <u>enabled</u> to support the continued development of this plugin - thank you!</strong></p>
-</blockquote>
-
-<dl>
         <dt>
             <input type="button" class="dws-run" id="STOPGENERATE" value="Stop Generation" style="display:none;">
             <input type="button" class="dws-not-run" id="MANUALGENERATE" value="Manual Generation" style="display:none;">
